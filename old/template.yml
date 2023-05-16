@@ -1,0 +1,7 @@
+---
+
+- name: Build templates
+  hosts: all
+
+  tasks:
+    - template: src=templates/nexus.j2 dest=configs/{{ inventory_hostname }}.cfg

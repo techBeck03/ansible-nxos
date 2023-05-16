@@ -1,0 +1,6 @@
+---
+access_vlan: 200
+hostname: nx-osv4
+mgmt_ip:  198.18.1.103
+if_list: ['Eth1/1','Eth1/2','Eth1/3']
+

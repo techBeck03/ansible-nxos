@@ -1,0 +1,10 @@
+[all:vars]
+ansible_connection = local
+
+[spine]
+nx-osv1
+nx-osv2
+
+[leaf]
+nx-osv3
+nx-osv4

@@ -1,0 +1,2 @@
+sudo docker run -d --name ctf -v $PWD/ctf-nxos-ansible:/ctf python tail -f /dev/null
+sudo docker exec -it ctf bash

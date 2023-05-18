@@ -1,0 +1,10 @@
+---
+- name: VLAN creation Playbook
+  hosts: all                        # Execute the tasks on all the hosts defined in the inventory file
+  gather_facts: false
+  tasks:
+    - name: Ensure VLAN 10 exists   # The configuration values are hardcoded in the script
+      cisco.nxos.nxos_vlans:
+        config:
+          - vlan_id: 10
+            name: web

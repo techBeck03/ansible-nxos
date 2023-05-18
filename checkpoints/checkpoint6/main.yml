@@ -1,0 +1,20 @@
+---
+- name: Configuration Playbook using Groups
+  hosts: all
+  gather_facts: false
+
+  # Note that no variable files are explicitly imported. Ansible will import the variables automatically, when defined
+  # in the standard directory structure.
+  # If the same variable is defined in both host_vars and group_vars, host_vars will have higher precedence and hence
+  # will be used in the tasks.
+
+  tasks:
+    - name: Configure hostname        # The variable is imported from the host_vars directory
+      cisco.nxos.nxos_system:
+        hostname: "{{ hostname }}"
+
+    - name: Enable features           # The variable is imported from the group_vars directory
+      cisco.nxos.nxos_feature:
+        feature: "{{ item }}"
+        state: enabled
+      loop: "{{ features }}"

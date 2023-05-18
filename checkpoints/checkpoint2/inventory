@@ -1,0 +1,9 @@
+nxosv1
+
+[all:vars]
+ansible_connection = httpapi
+ansible_httpapi_use_ssl = yes
+ansible_httpapi_validate_certs = no
+ansible_network_os = nxos
+ansible_user = ansible
+ansible_httpapi_pass = ansible

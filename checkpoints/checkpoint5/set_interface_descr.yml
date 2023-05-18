@@ -1,0 +1,41 @@
+---
+
+- name: Playbook for setting interface descriptions
+  hosts: all
+  gather_facts: false
+  vars_files:
+    - external_vars.yml
+
+  tasks:
+    - name: Set the physical ports descriptions for Web interfaces
+      cisco.nxos.nxos_interfaces:
+        config:
+          - name: "{{ item.name }}"
+            description: Web Vlan
+            enabled: true
+      loop:
+        "{{ physical_interfaces }}"   # The task will execute for each item defined under physical_interfaces variable
+      when:                           # only when the vlan value of each item defined is 10
+        - item.vlan == 10
+
+    - name: Set the physical ports descriptions for App interfaces
+      cisco.nxos.nxos_interfaces:
+        config:
+          - name: "{{ item.name }}"
+            description: App Vlan
+            enabled: true
+      loop:
+        "{{ physical_interfaces }}"   # The task will execute for each item defined under physical_interfaces variable
+      when:                           # only when the vlan value of each item defined is 20
+        - item.vlan == 20
+
+    - name: Set the physical ports descriptions for DB interfaces
+      cisco.nxos.nxos_interfaces:
+        config:
+          - name: "{{ item.name }}"
+            description: DB Vlan
+            enabled: true
+      loop:
+        "{{ physical_interfaces }}"   # The task will execute for each item defined under physical_interfaces variable
+      when:                           # only when the vlan value of each item defined is 30
+        - item.vlan == 30

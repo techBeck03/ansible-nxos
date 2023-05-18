@@ -1,0 +1,25 @@
+---
+- name: Gather Data
+  hosts: all
+  gather_facts: false
+  become: false
+
+  tasks:
+    - name: Get CDP neighbors
+      cisco.nxos.nxos_command:
+        commands: show cdp neighbors
+      register: my_neighbors
+
+    - name: Print vars
+      ansible.builtin.debug:
+        var: my_neighbors
+
+  # - name:  get routing table for mgmt VRF
+  #   nxos_command:
+  #     type: show
+  #     host: "{{ inventory_hostname }}"
+  #     command: "show ip route vrf management"
+  #   register: my_routes
+
+  # - name: store to file
+  #   template: src=templates/data.j2 dest=data/{{ inventory_hostname }}_gather_data.json

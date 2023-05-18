@@ -1,0 +1,25 @@
+---
+- name: VLAN Interface Configuration Playbook
+  hosts: all
+  gather_facts: false
+  vars_files:
+    - external_vars.yml
+
+  tasks:
+    - name: Create VLAN interfaces    # The task will execute for each item defined under vlan_interfaces variable
+      cisco.nxos.nxos_interfaces:
+        config:
+          - name: "{{ item.name }}"
+            description: "{{ item.description }}"
+            enabled: true
+      loop:
+        "{{ vlan_interfaces }}"
+
+    - name: IPv4 Address configuration for the VLAN interfaces
+      cisco.nxos.nxos_l3_interfaces:
+        config:
+          - name: "{{ item.name }}"
+            ipv4:
+              - address: "{{ item.ipv4 }}/{{ item.mask }}"
+      loop:
+        "{{ vlan_interfaces }}"

@@ -53,8 +53,8 @@
         access_groups:
           - afi: ipv4
             acls:
-              name: web_acl
-              direction: ingress
+              - name: web_acl
+                direction: ingress
 
 - name: Ensure respective VRFs exist on Vlan interfaces
   cisco.nxos.nxos_vrf_interface:

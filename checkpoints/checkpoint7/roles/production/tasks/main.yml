@@ -19,7 +19,7 @@
     file: private_vlan.yml
 
 - name: Create static routes associated with the VRFs
-  cisco.nxos.nxos_static_route:
+  cisco.nxos.nxos_static_routes:
     config:
       - vrf: "{{ item.vrf }}"
         address_families:

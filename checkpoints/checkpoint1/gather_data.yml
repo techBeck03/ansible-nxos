@@ -7,7 +7,9 @@
   tasks:
     - name: Get CDP neighbors
       cisco.nxos.nxos_command:
-        commands: show cdp neighbors
+        commands:
+          - command: show cdp neighbors
+            output: json
       register: my_neighbors
 
     - name: Print vars

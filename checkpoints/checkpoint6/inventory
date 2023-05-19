@@ -1,5 +1,5 @@
-nxosv1
-nxosv2
+nxosv1 ansible_host=198.18.1.51
+nxosv2 ansible_host=198.18.1.52
 
 [devtest]
 nxosv1
@@ -8,6 +8,9 @@ nxosv1
 nxosv2
 
 [all:vars]
-ansible_connection = local
-ansible_ssh_user = ansible
-ansible_ssh_pass = ansible
+ansible_connection = httpapi
+ansible_httpapi_use_ssl = yes
+ansible_httpapi_validate_certs = no
+ansible_network_os = nxos
+ansible_user = ansible
+ansible_httpapi_pass = ansible

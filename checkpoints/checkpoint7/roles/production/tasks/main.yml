@@ -23,11 +23,11 @@
     config:
       - vrf: "{{ item.vrf }}"
         address_families:
-          afi: ipv4
-          routes:
-            - dest: "{{ item.dest }}"
-              next_hops:
-                - forward_router_address: "{{ item.next_hop }}"
+          - afi: ipv4
+            routes:
+              - dest: "{{ item.dest }}"
+                next_hops:
+                  - forward_router_address: "{{ item.next_hop }}"
   loop:
     "{{ vrf_iproutes }}"
 

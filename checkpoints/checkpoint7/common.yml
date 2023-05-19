@@ -2,6 +2,6 @@
 - name: Config playbook for both production and devtest environment
   hosts: devtest:production     # Run the playbook for both devtest and production devices
   connection: local
-  gather_facts: no
+  gather_facts: false
   roles:
-  - common
+    - common

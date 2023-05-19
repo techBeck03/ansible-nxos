@@ -2,8 +2,13 @@
 - name: Config playbook for both production and devtest environment
   hosts: devtest:production
   connection: local
-  gather_facts: no
+  gather_facts: false
 
-- import_playbook: common.yml
-- import_playbook: production.yml
-- import_playbook: devtest.yml
+- name: Import common playbook
+  ansible.builtin.import_playbook: common.yml
+
+- name: Import production playbook
+  ansible.builtin.import_playbook: production.yml
+
+- name: Import devtest playbook
+  ansible.builtin.import_playbook: devtest.yml

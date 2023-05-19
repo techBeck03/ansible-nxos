@@ -1,7 +1,0 @@
----
-
-cisco:
-  nexus:
-    username: "cisco"
-    password: "cisco"
-

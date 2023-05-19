@@ -6,11 +6,16 @@
     - external_vars.yml
 
   tasks:
+    - name: Enable interface-vlan feature
+      cisco.nxos.feature:
+        feature: interface-vlan
+        state: enabled
+
     - name: Create VLAN interfaces    # The task will execute for each item defined under vlan_interfaces variable
       cisco.nxos.nxos_interfaces:
         config:
           - name: "{{ item.name }}"
-            description: "{{ item.description }}"
+            description: "{{ item.desc }}"
             enabled: true
       loop:
         "{{ vlan_interfaces }}"

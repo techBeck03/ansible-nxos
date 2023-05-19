@@ -1,4 +1,4 @@
-sudo yum install docker
+sudo yum install -y docker
 sudo systemctl enable docker
 sudo systemctl start docker
 

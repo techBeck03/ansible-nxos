@@ -1,0 +1,125 @@
+---
+
+- name: Enable features
+  cisco.nxos.nxos_feature:
+    feature: private-vlan
+    state: enabled
+
+- name: Create VRFs
+  cisco.nxos.nxos_vrf:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - App
+    - Web
+    - DB
+
+- name: Import private vlan tasks
+  ansible.builtin.import_tasks:       # Import the tasks defined in the private_vlan.yml file
+    file: private_vlan.yml
+
+- name: Create static routes associated with the VRFs
+  cisco.nxos.nxos_static_route:
+    config:
+      - vrf: "{{ item.vrf }}"
+        address_families:
+          afi: ipv4
+          routes:
+            - dest: "{{ item.dest }}"
+              next_hops:
+                - forward_router_address: "{{ item.next_hop }}"
+  loop:
+    "{{ vrf_iproutes }}"
+
+- name: Create IP Access List
+  cisco.nxos.nxos_acls:
+    config:
+      - afi: ipv4
+        acls:
+          - name: web_acl
+            aces:
+              - grant: permit
+                protocol: tcp
+                source:
+                  any: true
+                destination:
+                  prefix: 10.1.1.0/24
+                sequence: 10
+
+- name: Apply ACL on  Web VLAN
+  cisco.nxos.nxos_acl_interfaces:
+    config:
+      - name: Vlan10
+        access_groups:
+          - afi: ipv4
+            acls:
+              name: web_acl
+              direction: ingress
+
+- name: Ensure respective VRFs exist on Vlan interfaces
+  cisco.nxos.nxos_vrf_interface:
+    vrf: "{{ item.vrf }}"
+    interface: "Vlan{{ item.vlan }}"
+    state: present
+  loop:
+    "{{ vlans }}"
+
+- name: IPv4 Address configuration for the VLAN interfaces
+  cisco.nxos.nxos_l3_interfaces:
+    config:
+      - name: "Vlan{{ item.vlan }}"
+        ipv4:
+          - address: "{{ item.ipv4 }}/{{ item.mask }}"
+  loop:
+    "{{ vlans }}"
+
+- name: Set the physical ports descriptions
+  cisco.nxos.nxos_interfaces:
+    config:
+      - name: "{{ item.name }}"
+        description: "{{ item.desc }}"
+  loop:
+    - "{{ fw_connected_interfaces }}"
+    - "{{ lb_connected_interfaces }}"
+    - "{{ internet_conn_interfaces }}"
+
+- name: Ensure interfaces are Layer 3 ports before configuring VRF
+  cisco.nxos.nxos_interfaces:
+    config:
+      - name: "{{ item.name }}"
+        mode: layer3
+  loop:
+    - "{{ fw_connected_interfaces }}"
+    - "{{ lb_connected_interfaces }}"
+    - "{{ internet_conn_interfaces }}"
+
+- name: Ensure respective vrf exists on Physical interfaces
+  cisco.nxos.nxos_vrf_interface:
+    vrf: "{{ item.vrf }}"
+    interface: "{{ item.name }}"
+    state: present
+  loop:
+    - "{{ fw_connected_interfaces }}"
+    - "{{ lb_connected_interfaces }}"
+    - "{{ internet_conn_interfaces }}"
+
+- name: IPv4 Address configuration for the physical interfaces
+  cisco.nxos.nxos_l3_interfaces:
+    config:
+      - name: "Vlan{{ item.vlan }}"
+        ipv4:
+          - address: "{{ item.ipv4 }}/{{ item.mask }}"
+  loop:
+    - "{{ fw_connected_interfaces }}"
+    - "{{ lb_connected_interfaces }}"
+    - "{{ internet_conn_interfaces }}"
+
+- name: Admin up the physical interfaces
+  cisco.nxos.nxos_interfaces:
+    config:
+      - name: "{{ item.name }}"
+        enabled: true
+  loop:
+    - "{{ fw_connected_interfaces }}"
+    - "{{ lb_connected_interfaces }}"
+    - "{{ internet_conn_interfaces }}"

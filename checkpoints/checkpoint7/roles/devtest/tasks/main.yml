@@ -1,0 +1,30 @@
+---
+
+- name: Set the switchport trunk allowed vlan on all physical interfaces
+  cisco.nxos.nxos_l2_interfaces:
+    config:
+      - name: "{{ item.name }}"
+        mode: trunk
+        trunk:
+          allowed_vlans: "1-4094"
+  loop:
+    "{{ physical_interfaces }}"
+
+- name: Set the switchport access vlan
+  cisco.nxos.nxos_l2_interfaces:
+    config:
+      - name: "{{ item.name }}"
+        mode: access
+        access:
+          vlan: "{{ item.vlan }}"
+  loop:
+    "{{ physical_interfaces }}"
+
+- name: IPv4 Address configuration for the VLAN interfaces
+  cisco.nxos.nxos_l3_interfaces:
+    config:
+      - name: "{{ item.name }}"
+        ipv4:
+          - address: "{{ item.ipv4 }}/24"
+  loop:
+    "{{ vlan_interfaces }}"

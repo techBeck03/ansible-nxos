@@ -1,7 +1,7 @@
 ---
 
 - name: Set the switchport trunk allowed vlan on all physical interfaces
-  nxos_switchport:
+  cisco.nxos.nxos_switchport:
     interface: "{{ item.name }}"
     mode: trunk
     trunk_allowed_vlans: "1-4094"

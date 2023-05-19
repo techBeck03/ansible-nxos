@@ -1,0 +1,69 @@
+---
+
+- name: Enable features
+  cisco.nxos.nxos_feature:
+    feature: interface-vlan
+    state: enabled
+
+- name: Ensure VLAN 10, 20, 30 exist
+  cisco.nxos.nxos_vlans:
+    config:
+      - vlan_id: "{{ vlan.id }}"
+        name: "{{ vlan.name }}"
+  loop:
+    - { id: 10, name: web }
+    - { id: 20, name: app }
+    - { id: 30, name: db }
+  loop_control:
+    loop_var: vlan
+    label: "Creating vlan id: {{ vlan.id }} with name: {{ vlan.name }} "
+
+- name: Admin up the VLAN interfaces
+  cisco.nxos.nxos_interfaces:
+    config:
+      - name: "{{ item.name }}"
+        description: "{{ item.desc }}"
+        enabled: true
+  loop:
+    "{{ vlan_interfaces }}"
+
+- name: Set the physical ports descriptions
+  cisco.nxos.nxos_interfaces:
+    config:
+      - name: "{{ item.name }}"
+        description: Web Vlan
+  loop: "{{ physical_interfaces }}"
+  when:
+    - item.vlan == 10
+
+- name: Set the physical ports descriptions
+  cisco.nxos.nxos_interfaces:
+    config:
+      - name: "{{ item.name }}"
+        description: App Vlan
+  loop: "{{ physical_interfaces }}"
+  when:
+    - item.vlan == 20
+
+- name: Set the physical ports descriptions
+  cisco.nxos.nxos_interfaces:
+    config:
+      - name: "{{ item.name }}"
+        description: DB Vlan
+  loop: "{{ physical_interfaces }}"
+  when:
+    - item.vlan == 30
+
+- name: Set the physical interfaces eth1-15 as L2 ports
+  cisco.nxos.nxos_interfaces:
+    config:
+      - name: "{{ item.name }}"
+        enabled: true
+  loop: "{{ physical_interfaces }}"
+
+- name: Admin up the physical interfaces
+  cisco.nxos.nxos_interfaces:
+    config:
+      - name: "{{ item.name }}"
+        enabled: true
+  loop: "{{ physical_interfaces }}"

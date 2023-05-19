@@ -1,2 +1,11 @@
-sudo docker run -d --name ctf -v $PWD/ctf-nxos-ansible:/ctf python tail -f /dev/null
+sudo groupadd docker
+sudo usermod -aG docker $USER
+sudo chown root:docker /var/run/docker.sock
+sudo chown -R root:docker /var/run/docker
+
+sudo docker run -d --name ctf -v $PWD/ctf-nxos-ansible:/ctf:z python tail -f /dev/null
 sudo docker exec -it ctf bash
+
+pip install ansible
+
+ansible-galaxy collection install cisco.nxos

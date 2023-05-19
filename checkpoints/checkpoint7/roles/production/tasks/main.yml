@@ -54,15 +54,14 @@
           - afi: ipv4
             acls:
               - name: web_acl
-                direction: ingress
+                direction: in
 
 - name: Ensure respective VRFs exist on Vlan interfaces
   cisco.nxos.nxos_vrf_interface:
     vrf: "{{ item.vrf }}"
     interface: "Vlan{{ item.vlan }}"
     state: present
-  loop:
-    "{{ vlans }}"
+  loop: "{{ vlans }}"
 
 - name: IPv4 Address configuration for the VLAN interfaces
   cisco.nxos.nxos_l3_interfaces:
@@ -70,56 +69,40 @@
       - name: "Vlan{{ item.vlan }}"
         ipv4:
           - address: "{{ item.ipv4 }}/{{ item.mask }}"
-  loop:
-    "{{ vlans }}"
+  loop: "{{ vlans }}"
 
 - name: Set the physical ports descriptions
   cisco.nxos.nxos_interfaces:
     config:
       - name: "{{ item.name }}"
         description: "{{ item.desc }}"
-  loop:
-    - "{{ fw_connected_interfaces }}"
-    - "{{ lb_connected_interfaces }}"
-    - "{{ internet_conn_interfaces }}"
+  loop: "{{ fw_connected_interfaces + lb_connected_interfaces + internet_conn_interfaces }}"
 
 - name: Ensure interfaces are Layer 3 ports before configuring VRF
   cisco.nxos.nxos_interfaces:
     config:
       - name: "{{ item.name }}"
         mode: layer3
-  loop:
-    - "{{ fw_connected_interfaces }}"
-    - "{{ lb_connected_interfaces }}"
-    - "{{ internet_conn_interfaces }}"
+  loop: "{{ fw_connected_interfaces + lb_connected_interfaces + internet_conn_interfaces }}"
 
 - name: Ensure respective vrf exists on Physical interfaces
   cisco.nxos.nxos_vrf_interface:
     vrf: "{{ item.vrf }}"
     interface: "{{ item.name }}"
     state: present
-  loop:
-    - "{{ fw_connected_interfaces }}"
-    - "{{ lb_connected_interfaces }}"
-    - "{{ internet_conn_interfaces }}"
+  loop: "{{ fw_connected_interfaces + lb_connected_interfaces + internet_conn_interfaces }}"
 
 - name: IPv4 Address configuration for the physical interfaces
   cisco.nxos.nxos_l3_interfaces:
     config:
-      - name: "Vlan{{ item.vlan }}"
+      - name: "{{ item.name }}"
         ipv4:
           - address: "{{ item.ipv4 }}/{{ item.mask }}"
-  loop:
-    - "{{ fw_connected_interfaces }}"
-    - "{{ lb_connected_interfaces }}"
-    - "{{ internet_conn_interfaces }}"
+  loop: "{{ fw_connected_interfaces + lb_connected_interfaces + internet_conn_interfaces }}"
 
 - name: Admin up the physical interfaces
   cisco.nxos.nxos_interfaces:
     config:
       - name: "{{ item.name }}"
         enabled: true
-  loop:
-    - "{{ fw_connected_interfaces }}"
-    - "{{ lb_connected_interfaces }}"
-    - "{{ internet_conn_interfaces }}"
+  loop: "{{ fw_connected_interfaces + lb_connected_interfaces + internet_conn_interfaces }}"

@@ -7,7 +7,7 @@
 
   tasks:
     - name: Enable interface-vlan feature
-      cisco.nxos.feature:
+      cisco.nxos.nxos_feature:
         feature: interface-vlan
         state: enabled
 

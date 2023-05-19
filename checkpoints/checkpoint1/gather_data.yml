@@ -7,9 +7,7 @@
   tasks:
     - name: Get CDP neighbors
       cisco.nxos.nxos_command:
-        commands:
-          - command: show cdp neighbors
-            output: json
+        commands: show cdp neighbors
       register: my_neighbors
 
     - name: Print vars
@@ -19,7 +17,7 @@
     - name: Store to file
       ansible.builtin.template:
         src: data.j2
-        dest: cdp_neighbors.json
+        dest: gather_data_results
         mode: '0600'
 
   # - name:  get routing table for mgmt VRF

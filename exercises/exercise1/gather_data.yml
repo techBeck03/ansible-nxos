@@ -26,5 +26,5 @@
     - name: Store to file
       ansible.builtin.template:
         src: data.j2
-        dest: gather_data_results
+        dest: "gather_data_results_{{ inventory_hostname }}"
         mode: '0600'

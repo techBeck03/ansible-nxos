@@ -10,10 +10,18 @@
         commands: show cdp neighbors
       register: my_neighbors
 
+    - name: Print my_neighbors
+      ansible.builtin.debug:
+        var: my_neighbors
+
     - name: Get running config for vrf management
       cisco.nxos.nxos_command:
         commands: show run vrf management
       register: vrf_management_running
+
+    - name: Print vrf_management_running
+      ansible.builtin.debug:
+        var: vrf_management_running
 
     - name: Store to file
       ansible.builtin.template:

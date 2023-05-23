@@ -9,7 +9,7 @@
       cisco.nxos.nxos_command:
         commands: show cdp neighbors
       register: my_neighbors
-    
+
     - name: Get running config for vrf management
       cisco.nxos.nxos_command:
         commands: show run vrf management

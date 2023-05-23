@@ -1,5 +1,5 @@
 nxosv1 ansible_host=198.18.1.51
-nxosv1 ansible_host=198.18.1.52
+nxosv2 ansible_host=198.18.1.52
 
 [all:vars]
 ansible_connection = httpapi

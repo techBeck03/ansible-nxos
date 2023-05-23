@@ -23,8 +23,10 @@
     - name: IPv4 Address configuration for the VLAN interfaces
       cisco.nxos.nxos_l3_interfaces:
         config:
-          - name: "{{ item.name }}"
+          - name: "{{ vlan_interface.name }}"
             ipv4:
-              - address: "{{ item.ipv4 }}/{{ item.mask }}"
+              - address: "{{ vlan_interface.ipv4 }}/{{ vlan_interface.mask }}"
       loop:
         "{{ vlan_interfaces }}"
+      loop_control:
+        loop_var: vlan_interface

@@ -1,7 +1,6 @@
 ---
 - name: Config playbook for devtest environment
   hosts: devtest          # Run the playbook for only the devtest devices
-  connection: local
   gather_facts: false
   roles:
     - devtest

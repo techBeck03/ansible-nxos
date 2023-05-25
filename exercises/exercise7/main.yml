@@ -1,7 +1,6 @@
 ---
 - name: Config playbook for both production and devtest environment
   hosts: devtest:production
-  connection: local
   gather_facts: false
 
 - name: Import common playbook

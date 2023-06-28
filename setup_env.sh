@@ -7,5 +7,5 @@ sudo usermod -aG docker $USER
 sudo chown root:docker /var/run/docker.sock
 sudo chown -R root:docker /var/run/docker
 
-sudo docker run -d --name ctf -v /home/ansible/ctf-nxos-ansible:/ctf:z python tail -f /dev/null
+sudo docker run -d --name ctf -v /home/ansible/ctf-nxos-ansible:/ctf:z robbeck/nxos_ctf:1.0
 sudo docker exec -it ctf bash
